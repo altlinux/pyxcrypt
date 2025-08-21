@@ -1,0 +1,12 @@
+[project]
+name = "pyxcrypt"
+version = "0.1.0"
+description = "Python3 bindings for libxcrypt"
+license = "GPL-3.0-or-later"
+authors = [
+    {name = "Daniel Zagaynov", email = "kotopesutility@altlinux.org"}]
+readme = "README.md"
+
+[build-system]
+requires = ["meson-python"]
+build-backend = "mesonpy"
