@@ -7,7 +7,6 @@ import pyxcrypt
 
 
 class Test_GenSalt(unittest.TestCase):
-    crypt_gensalt = pyxcrypt.pyxcrypt._crypt_gensalt
     MIN_LINEAR_COST = 1
     MAX_LINEAR_COST = 2 ** (8 * sysconfig.get_config_var("SIZEOF_LONG")) - 1
     # Rounds and expected output for descrypt
@@ -196,7 +195,7 @@ class Test_GenSalt(unittest.TestCase):
                                   "$gy$jFT$UqGBkVu01rurVZqgNchTB0"]
                              }
 
-    def _test_prefix(self, rounds_output, prefix):
+    def _test_prefix(self, rounds_output, prefix, crypt_gensalt=pyxcrypt.pyxcrypt._crypt_gensalt):
         nrbytes = 16  # This value is hardcoded in libxcrypt gensalt tests
         self.entropy = [b"\x58\x35\xcd\x26\x03\xab\x2c\x14\x92\x13\x1e\x59\xb0\xbc\xfe\xd5",
                         b"\x9b\x35\xa2\x45\xeb\x68\x9e\x8f\xd9\xa9\x09\x71\xcc\x4d\x21\x44",
@@ -206,7 +205,7 @@ class Test_GenSalt(unittest.TestCase):
         for rounds, outputs in rounds_output.items():
             with self.subTest(f"Testing crypt_gensalt for {prefix}:"):
                 for entropy, output in zip(self.entropy, outputs):
-                    got = self.crypt_gensalt(prefix, rounds, entropy, nrbytes)
+                    got = crypt_gensalt(prefix, rounds, entropy, nrbytes)
                     self.assertEqual(got, output,
                                      msg=f"Test crypt_gensalt for prefix={prefix} and entropy={entropy} failed.")
 
@@ -264,7 +263,58 @@ class Test_GenSalt(unittest.TestCase):
         with self.subTest("Testing crypt_gensalt for $2x$:"):
             with self.assertRaises(RuntimeError,
                                    msg="Test crypt_gensalt for prefix=$2x$ failed."):
-                self.crypt_gensalt("$2x$", 0, None, 0)
+                pyxcrypt.pyxcrypt._crypt_gensalt("$2x$", 0, None, 0)
+
+
+class TestGenSalt(Test_GenSalt):
+    def test_yescrypt(self):
+        self._test_prefix(self.ys_rounds_expected, "yescrypt", pyxcrypt.crypt_gensalt)
+
+    def test_gost_yescrypt(self):
+        self._test_prefix(self.gs_ys_rounds_expected, "gost_yescrypt", pyxcrypt.crypt_gensalt)
+        self._test_prefix(self.gs_ys_rounds_expected, "gost-yescrypt", pyxcrypt.crypt_gensalt)
+
+    def test_descrypt(self):
+        self._test_prefix(self.des_rounds_expected, "descrypt", pyxcrypt.crypt_gensalt)
+
+    def test_md5crypt(self):
+        self._test_prefix(self.md5_rounds_expected, "md5crypt", pyxcrypt.crypt_gensalt)
+
+    @unittest.skip("Not supported")
+    def test_sunmd5crypt(self):
+        self._test_prefix(self.sunmd5_rounds_expected, "sunmd5", pyxcrypt.crypt_gensalt)
+
+    @unittest.skip("Not supported")
+    def test_sm3crypt(self):
+        self._test_prefix(self.sm3_rounds_expected, "sm3crypt", pyxcrypt.crypt_gensalt)
+
+    @unittest.skip("Not supported")
+    def test_sha1crypt(self):
+        self._test_prefix(self.sha1_rounds_expected, "sha1crypt", pyxcrypt.crypt_gensalt)
+
+    def test_sha256crypt(self):
+        self._test_prefix(self.sha256_rounds_expected, "sha256crypt", pyxcrypt.crypt_gensalt)
+
+    def test_sha512crypt(self):
+        self._test_prefix(self.sha512_rounds_expected, "sha512crypt", pyxcrypt.crypt_gensalt)
+
+    def test_sscrypt(self):
+        self._test_prefix(self.ss_rounds_expected, "scrypt", pyxcrypt.crypt_gensalt)
+
+    def test_bcrypt(self):
+        self._test_prefix(self.bcrypt_rounds_expected, "bcrypt", pyxcrypt.crypt_gensalt)
+
+    def test_bcrypt_a(self):
+        self._test_prefix(self.bcrypt_a_rounds_expected, "bcrypt_a", pyxcrypt.crypt_gensalt)
+
+    def test_bcrypt_y(self):
+        self._test_prefix(self.bcrypt_y_rounds_expected, "bcrypt_y", pyxcrypt.crypt_gensalt)
+
+    def test_bcrypt_x(self):
+        with self.subTest("Testing crypt_gensalt for bcrypt_x:"):
+            with self.assertRaises(RuntimeError,
+                                   msg="Test crypt_gensalt for prefix=bcrypt_x failed."):
+                pyxcrypt.crypt_gensalt("bcrypt_x", 0, None, 0)
 
 
 if __name__ == "__main__":
