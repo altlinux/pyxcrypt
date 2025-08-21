@@ -1,0 +1,71 @@
+/*
+This file is part of pyxcrypt.
+
+pyxcrypt is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+pyxcrypt is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with pyxcrypt.
+If not, see <https://www.gnu.org/licenses/>.
+ */
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
+
+#include <crypt.h>
+
+
+static PyObject * _crypt_gensalt(PyObject *self, PyObject *args)
+{
+    errno = 0;
+    int nrbytes;
+    unsigned long count;
+    char *_hash = NULL;
+    const char *prefix, *rbytes;
+    Py_ssize_t *dumb_sz_1, *dumb_sz_2;
+
+    if(PyTuple_Size(args) < 4)
+    {
+        PyErr_SetString(PyExc_TypeError, "Expected 4 arguments");
+        return NULL;
+    }
+    if (PyArg_ParseTuple(args, "z#kz#i", &prefix, &dumb_sz_1, &count, &rbytes, &dumb_sz_2, &nrbytes) == -1)
+    {
+        PyErr_SetString(PyExc_TypeError, "Arguments parsing");
+        return NULL;
+    }
+
+    if ((_hash = crypt_gensalt(prefix, count, rbytes, nrbytes)) == NULL)
+    {
+        PyErr_SetString(PyExc_RuntimeError, strerror(errno));
+        return NULL;
+    }
+
+    return Py_BuildValue("z", _hash);;
+}
+
+static PyMethodDef PyXcryptMethods[] = {
+    {"_crypt_gensalt", _crypt_gensalt, METH_VARARGS, "compile a string for use as the setting argument to crypt"},
+    {NULL, NULL, 0, NULL}
+};
+
+static struct PyModuleDef pyxcrypt = {
+    PyModuleDef_HEAD_INIT,
+    "pyxcrypt",
+    NULL,
+    -1,
+    PyXcryptMethods
+};
+
+PyMODINIT_FUNC
+PyInit_pyxcrypt(void){
+    return PyModule_Create(&pyxcrypt);
+}
