@@ -17,6 +17,20 @@ from . import pyxcrypt
 
 
 def crypt_gensalt(prefix=None, count=0, rbytes=None, nrbytes=0):
+    '''
+    Compile a string for use as the setting argument to crypt
+
+    :param prefix: selects the hashing method to use
+    :type prefix: str, bytes-like-object or None
+    :param count: controls the CPU time cost of the hash
+    :type count: int
+    :param rbytes: random bytes for use as a "salt"
+    :type rbytes: str, bytes-like-object or None
+    :param nrbytes: length of result
+    :type nrbytes: int
+    :return: salt
+    :rtype: str
+    '''
     hashes = {"yescrypt": "$y$",
               "gost-yescrypt": "$gy$",
               "gost_yescrypt": "$gy$",
@@ -39,4 +53,16 @@ def crypt_gensalt(prefix=None, count=0, rbytes=None, nrbytes=0):
 
 
 def crypt_gensalt_default(count=0, rbytes=None, nrbytes=0):
+    '''
+    Same as crypt_gensalt but with the default (prefered) hashing method
+
+    :param count: controls the CPU time cost of the hash
+    :type count: int
+    :param rbytes: random bytes for use as a "salt"
+    :type rbytes: str, bytes-like-object or None
+    :param nrbytes: length of result
+    :type nrbytes: int
+    :return: salt
+    :rtype: str
+    '''
     return crypt_gensalt(None, count, rbytes, nrbytes)
