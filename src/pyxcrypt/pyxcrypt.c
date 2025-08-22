@@ -49,11 +49,39 @@ static PyObject * _crypt_gensalt(PyObject *self, PyObject *args)
         return NULL;
     }
 
-    return Py_BuildValue("z", _hash);;
+    return Py_BuildValue("z", _hash);
+}
+
+static PyObject * _crypt(PyObject *self, PyObject *args)
+{
+    errno = 0;
+    char *_hash = NULL;
+    const char *phrase, *setting;
+    Py_ssize_t *dumb_sz_1, *dumb_sz_2;
+
+    if(PyTuple_Size(args) < 2)
+    {
+        PyErr_SetString(PyExc_TypeError, "Expected 2 arguments");
+        return NULL;
+    }
+    if (PyArg_ParseTuple(args, "z#z#", &phrase, &dumb_sz_1, &setting, &dumb_sz_2) == -1)
+    {
+        PyErr_SetString(PyExc_TypeError, "Arguments parsing");
+        return NULL;
+    }
+
+    if ((_hash = crypt(phrase, setting)) == NULL || _hash[0] == '*')
+    {
+        PyErr_SetString(PyExc_RuntimeError, strerror(errno));
+        return NULL;
+    }
+
+    return Py_BuildValue("z", _hash);
 }
 
 static PyMethodDef PyXcryptMethods[] = {
     {"_crypt_gensalt", _crypt_gensalt, METH_VARARGS, "compile a string for use as the setting argument to crypt"},
+    {"_crypt", _crypt, METH_VARARGS, "irreversibly 'hash' phrase using a cryptographic 'hashing method.'"},
     {NULL, NULL, 0, NULL}
 };
 
