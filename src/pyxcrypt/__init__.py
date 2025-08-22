@@ -15,6 +15,10 @@ If not, see <https://www.gnu.org/licenses/>.
 
 from . import pyxcrypt
 
+CRYPT_SALT_OK = 0
+CRYPT_SALT_INVALID = 1
+CRYPT_SALT_METHOD_LEGACY = 3
+
 
 def crypt_gensalt(prefix=None, count=0, rbytes=None, nrbytes=0):
     '''
