@@ -79,9 +79,30 @@ static PyObject * _crypt(PyObject *self, PyObject *args)
     return Py_BuildValue("z", _hash);
 }
 
+static PyObject * _crypt_checksalt(PyObject *self, PyObject *args)
+{
+    errno = 0;
+    const char *setting;
+    Py_ssize_t *dumb_sz_1;
+
+    if(PyTuple_Size(args) < 1)
+    {
+        PyErr_SetString(PyExc_TypeError, "Expected 2 arguments");
+        return NULL;
+    }
+    if (PyArg_ParseTuple(args, "z#", &setting, &dumb_sz_1) == -1)
+    {
+        PyErr_SetString(PyExc_TypeError, "Arguments parsing");
+        return NULL;
+    }
+
+    return Py_BuildValue("i", crypt_checksalt(setting));
+}
+
 static PyMethodDef PyXcryptMethods[] = {
     {"_crypt_gensalt", _crypt_gensalt, METH_VARARGS, "compile a string for use as the setting argument to crypt"},
-    {"_crypt", _crypt, METH_VARARGS, "irreversibly 'hash' phrase using a cryptographic 'hashing method.'"},
+    {"_crypt", _crypt, METH_VARARGS, "irreversibly 'hash' phrase using a cryptographic 'hashing method'"},
+    {"_crypt_checksalt", _crypt_checksalt, METH_VARARGS, "checks the setting string against the system configuration and reports whether the hashing method and parameters it specifies are acceptable"},
     {NULL, NULL, 0, NULL}
 };
 
