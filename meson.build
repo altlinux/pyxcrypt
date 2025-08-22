@@ -14,3 +14,8 @@ install_data(
   'src/pyxcrypt/__init__.py',
   install_dir: py.get_install_dir() / 'pyxcrypt'
 )
+
+install_data(
+  'README.md',
+  install_dir: py.get_install_dir() / 'pyxcrypt'
+)
