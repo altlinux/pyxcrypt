@@ -43,7 +43,7 @@ static PyObject * _crypt_gensalt(PyObject *self, PyObject *args)
         return NULL;
     }
 
-    if ((_hash = crypt_gensalt(prefix, count, rbytes, nrbytes)) == NULL)
+    if ((_hash = crypt_gensalt_ra(prefix, count, rbytes, nrbytes)) == NULL)
     {
         PyErr_SetString(PyExc_RuntimeError, strerror(errno));
         return NULL;
