@@ -5,7 +5,7 @@ import unittest
 import pyxcrypt
 
 
-class Test_GenSalt(unittest.TestCase):
+class Test_CheckSalt(unittest.TestCase):
     CRYPT_SALT_OK, CRYPT_SALT_INVALID, CRYPT_SALT_METHOD_LEGACY =\
             pyxcrypt.CRYPT_SALT_OK, pyxcrypt.CRYPT_SALT_INVALID, pyxcrypt.CRYPT_SALT_METHOD_LEGACY
     pref_chck_gen_crypt = {"": [CRYPT_SALT_INVALID, CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY],
@@ -121,6 +121,65 @@ class Test_GenSalt(unittest.TestCase):
                      "\\\\", "\x01\x01", "\x19\x19", "\x7f\x7f"]:
             with self.subTest(f"Testing checksalt for {pref}:"):
                 self.assertEqual(pyxcrypt.pyxcrypt._crypt_checksalt(pref), self.pref_chck_gen_crypt[pref][0],
+                                 msg=f"Test checksalt(prefix) for prefix={pref} failed.")
+
+
+class TestCheckSalt(Test_CheckSalt):
+    def test_yescrypt(self):
+        self._test_checksalt("$y$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    def test_gost_yescrypt(self):
+        self._test_checksalt("$gy$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    def test_descrypt(self):
+        self._test_checksalt("", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    @unittest.skip("Not supported")
+    def test_bigcrypt(self):
+        self._test_checksalt("", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    @unittest.skip("Not supported")
+    def test_bsdicrypt(self):
+        self._test_checksalt("_", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    def test_md5crypt(self):
+        self._test_checksalt("$1$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    @unittest.skip("Not supported")
+    def test_sunmd5crypt(self):
+        self._test_checksalt("$md5", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    @unittest.skip("Not supported")
+    def test_sm3crypt(self):
+        self._test_checksalt("$sm3$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    @unittest.skip("Not supported")
+    def test_sha1crypt(self):
+        self._test_checksalt("$sha1", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    def test_sha256crypt(self):
+        self._test_checksalt("$5$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    def test_sha512crypt(self):
+        self._test_checksalt("$6$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    def test_sscrypt(self):
+        self._test_checksalt("$7$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    def test_bcrypt(self):
+        self._test_checksalt("$2b$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    def test_bcrypt_a(self):
+        self._test_checksalt("$2a$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    def test_bcrypt_y(self):
+        self._test_checksalt("$2y$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
+
+    def test_invalid(self):
+        for pref in ["$@", "%A", "A%", "$2$", "*0", "*1", "  ", "!!", "**", "::", ";;",
+                     "\\\\", "\x01\x01", "\x19\x19", "\x7f\x7f"]:
+            with self.subTest(f"Testing checksalt for {pref}:"):
+                self.assertEqual(pyxcrypt.crypt_checksalt(pref), self.pref_chck_gen_crypt[pref][0],
                                  msg=f"Test checksalt(prefix) for prefix={pref} failed.")
 
 
