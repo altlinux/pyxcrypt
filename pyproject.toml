@@ -7,6 +7,9 @@ authors = [
     {name = "Daniel Zagaynov", email = "kotopesutility@altlinux.org"}]
 readme = "README.md"
 
+[project.urls]
+Repository = "https://github.com/altlinux/pyxcrypt"
+
 [build-system]
 requires = ["meson-python"]
 build-backend = "mesonpy"
