@@ -6,6 +6,12 @@ license = "GPL-3.0-or-later"
 authors = [
     {name = "Daniel Zagaynov", email = "kotopesutility@altlinux.org"}]
 readme = "README.md"
+classifiers = [
+"Programming Language :: C",
+"Topic :: Security",
+"Topic :: Security :: Cryptography",
+"Operating System :: POSIX :: Linux",
+]
 
 [project.urls]
 Repository = "https://github.com/altlinux/pyxcrypt"
