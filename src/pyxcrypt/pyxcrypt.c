@@ -32,7 +32,7 @@ static PyObject * _crypt_gensalt(PyObject *self, PyObject *args)
     const char *prefix, *rbytes;
     Py_ssize_t *dumb_sz_1, *dumb_sz_2;
 
-    if(PyTuple_Size(args) < 4)
+    if(PyTuple_Size(args) != 4)
     {
         PyErr_SetString(PyExc_TypeError, "Expected 4 arguments");
         return NULL;
@@ -60,7 +60,7 @@ static PyObject * _crypt(PyObject *self, PyObject *args)
     struct crypt_data *data = NULL;
     Py_ssize_t *dumb_sz_1, *dumb_sz_2;
 
-    if(PyTuple_Size(args) < 2)
+    if(PyTuple_Size(args) != 2)
     {
         PyErr_SetString(PyExc_TypeError, "Expected 2 arguments");
         return NULL;
@@ -95,7 +95,7 @@ static PyObject * _crypt_checksalt(PyObject *self, PyObject *args)
     const char *setting;
     Py_ssize_t *dumb_sz_1;
 
-    if(PyTuple_Size(args) < 1)
+    if(PyTuple_Size(args) != 1)
     {
         PyErr_SetString(PyExc_TypeError, "Expected 2 arguments");
         return NULL;
