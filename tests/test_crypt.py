@@ -7,7 +7,7 @@ import pathlib
 import pyxcrypt
 
 
-class Test_GenSalt(unittest.TestCase):
+class Test_Crypt(unittest.TestCase):
     with open(pathlib.Path(__file__).parent.joinpath("ka_table.json"), "rb") as f:
         pref_salt_hash_pass = json.load(f)
 
@@ -69,10 +69,62 @@ class Test_GenSalt(unittest.TestCase):
         self._test_crypt("$2y$")
 
     def test_bcrypt_x(self):
-        with self.subTest("Testing crypt_gensalt for $2x$:"):
-            with self.assertRaises(RuntimeError,
-                                   msg="Test crypt_gensalt for prefix=$2x$ failed."):
-                pyxcrypt.pyxcrypt._crypt_gensalt("$2x$", 0, None, 0)
+        self._test_crypt("$2x$")
+
+
+class TestCrypt(Test_Crypt):
+    def test_yescrypt(self):
+        self._test_crypt("$y$", pyxcrypt.crypt)
+
+    def test_gost_yescrypt(self):
+        self._test_crypt("$gy$", pyxcrypt.crypt)
+
+    def test_descrypt(self):
+        self._test_crypt("", pyxcrypt.crypt)
+
+    @unittest.skip("Not supported")
+    def test_bigcrypt(self):
+        self._test_crypt("", pyxcrypt.crypt)
+
+    @unittest.skip("Not supported")
+    def test_bsdicrypt(self):
+        self._test_crypt("_", pyxcrypt.crypt)
+
+    def test_md5crypt(self):
+        self._test_crypt("$1$", pyxcrypt.crypt)
+
+    @unittest.skip("Not supported")
+    def test_sunmd5crypt(self):
+        self._test_crypt("$md5", pyxcrypt.crypt)
+
+    @unittest.skip("Not supported")
+    def test_sm3crypt(self):
+        self._test_crypt("$sm3$", pyxcrypt.crypt)
+
+    @unittest.skip("Not supported")
+    def test_sha1crypt(self):
+        self._test_crypt("$sha1", pyxcrypt.crypt)
+
+    def test_sha256crypt(self):
+        self._test_crypt("$5$", pyxcrypt.crypt)
+
+    def test_sha512crypt(self):
+        self._test_crypt("$6$", pyxcrypt.crypt)
+
+    def test_sscrypt(self):
+        self._test_crypt("$7$", pyxcrypt.crypt)
+
+    def test_bcrypt(self):
+        self._test_crypt("$2b$", pyxcrypt.crypt)
+
+    def test_bcrypt_a(self):
+        self._test_crypt("$2a$", pyxcrypt.crypt)
+
+    def test_bcrypt_y(self):
+        self._test_crypt("$2y$", pyxcrypt.crypt)
+
+    def test_bcrypt_x(self):
+        self._test_crypt("$2x$", pyxcrypt.crypt)
 
 
 if __name__ == "__main__":
