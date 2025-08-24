@@ -111,7 +111,7 @@ static PyObject * _crypt_checksalt(PyObject *self, PyObject *args)
 
 static PyMethodDef PyXcryptMethods[] = {
     {"_crypt_gensalt", _crypt_gensalt, METH_VARARGS, "compile a string for use as the setting argument to crypt"},
-    {"_crypt", _crypt, METH_VARARGS, "irreversibly 'hash' phrase using a cryptographic 'hashing method'"},
+    {"_crypt", _crypt, METH_VARARGS, "irreversibly \"hash\" phrase using a cryptographic \"hashing method\""},
     {"_crypt_checksalt", _crypt_checksalt, METH_VARARGS, "checks the setting string against the system configuration and reports whether the hashing method and parameters it specifies are acceptable"},
     {NULL, NULL, 0, NULL}
 };

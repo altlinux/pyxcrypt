@@ -100,7 +100,7 @@ def crypt_checksalt_filter(salt):
 
 def crypt(phrase, salt=crypt_gensalt()):
     """
-    Irreversibly “hash” phrase using a cryptographic “hashing method.”
+    Irreversibly “hash” phrase using a cryptographic “hashing method”.
     By default parameter "salt" set to crypt_gensalt() without args, which
     generates salt with the default "hashing method" with random bytes
     obtained from the operating system
