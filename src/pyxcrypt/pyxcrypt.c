@@ -1,14 +1,19 @@
 /*
  * This file is part of pyxcrypt.
  *
- * pyxcrypt is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * pyxcrypt is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
  *
- * pyxcrypt is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * pyxcrypt is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with pyxcrypt.
+ * You should have received a copy of the GNU General Public License
+ * along with pyxcrypt.
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -37,7 +42,8 @@ static PyObject * _crypt_gensalt(PyObject *self, PyObject *args)
         PyErr_SetString(PyExc_TypeError, "Expected 4 arguments");
         return NULL;
     }
-    if (PyArg_ParseTuple(args, "z#kz#i", &prefix, &dumb_sz_1, &count, &rbytes, &dumb_sz_2, &nrbytes) == -1)
+    if (PyArg_ParseTuple(args, "z#kz#i", &prefix, &dumb_sz_1, &count, &rbytes,
+                &dumb_sz_2, &nrbytes) == -1)
     {
         PyErr_SetString(PyExc_TypeError, "Arguments parsing");
         return NULL;
@@ -65,7 +71,8 @@ static PyObject * _crypt(PyObject *self, PyObject *args)
         PyErr_SetString(PyExc_TypeError, "Expected 2 arguments");
         return NULL;
     }
-    if (PyArg_ParseTuple(args, "z#z#", &phrase, &dumb_sz_1, &setting, &dumb_sz_2) == -1)
+    if (PyArg_ParseTuple(args, "z#z#", &phrase, &dumb_sz_1, &setting,
+                &dumb_sz_2) == -1)
     {
         PyErr_SetString(PyExc_TypeError, "Arguments parsing");
         return NULL;
@@ -75,7 +82,7 @@ static PyObject * _crypt(PyObject *self, PyObject *args)
         PyErr_SetString(PyExc_MemoryError, strerror(errno));
         return NULL;
     }
-    memset (data, 0, sizeof(*data));
+    memset(data, 0, sizeof(*data));
     if (crypt_r(phrase, setting, data) == NULL || data->output[0] == '*')
     {
         PyErr_SetString(PyExc_RuntimeError, strerror(errno));
@@ -110,9 +117,13 @@ static PyObject * _crypt_checksalt(PyObject *self, PyObject *args)
 }
 
 static PyMethodDef PyXcryptMethods[] = {
-    {"_crypt_gensalt", _crypt_gensalt, METH_VARARGS, "compile a string for use as the setting argument to crypt"},
-    {"_crypt", _crypt, METH_VARARGS, "irreversibly \"hash\" phrase using a cryptographic \"hashing method\""},
-    {"_crypt_checksalt", _crypt_checksalt, METH_VARARGS, "checks the setting string against the system configuration and reports whether the hashing method and parameters it specifies are acceptable"},
+    {"_crypt_gensalt", _crypt_gensalt, METH_VARARGS,
+     "compile a string for use as the setting argument to crypt"},
+    {"_crypt", _crypt, METH_VARARGS,
+     "irreversibly \"hash\" phrase using a cryptographic \"hashing method\""},
+    {"_crypt_checksalt", _crypt_checksalt, METH_VARARGS,
+     "checks the setting string against the system configuration and reports "
+     "whether the hashing method and parameters it specifies are acceptable"},
     {NULL, NULL, 0, NULL}
 };
 
