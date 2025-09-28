@@ -10,12 +10,19 @@ install: true,
 subdir: 'pyxcrypt'
 )
 
-install_data(
+py.install_sources(
   'src/pyxcrypt/__init__.py',
-  install_dir: py.get_install_dir() / 'pyxcrypt'
+  subdir: 'pyxcrypt'
 )
 
 install_data(
   'README.md',
   install_dir: py.get_install_dir() / 'pyxcrypt'
+)
+
+python_paths = [join_paths(meson.current_build_dir(), '../src/')]
+run_tests = find_program('tests/run_tests.sh')
+test('unit-tests',
+  run_tests,
+  args: ['../tests'],
 )
