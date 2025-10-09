@@ -1,0 +1,31 @@
+---
+name: check_on_linux
+on: [push, pull_request]
+
+jobs:
+  check_development:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        release:
+          - bionic
+          - focal
+          - jammy
+          - noble
+          - plucky
+          - questing
+    steps:
+      - run: sudo apt-get update
+      - run: sudo apt-get install libcrypt-dev python3 meson git
+      - name: Clone sources
+        run: git -C /tmp clone https://github.com/altlinux/pyxcrypt.git
+      - name: Checkout
+        run: git -C /tmp/pyxcrypt checkout development
+      - name: Prepare
+        run: cd /tmp/pyxcrypt && meson linux_build
+      - name: Run tests
+        run: meson test -C /tmp/pyxcrypt/linux_build
+      - name: Print log on failure
+        if: failure()
+        run: cat /tmp/pyxcrypt/linux_build/meson-logs/testlog.txt
