@@ -1,0 +1,44 @@
+---
+name: GenDocs
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  gen_docs:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+    steps:
+      - run: sudo apt-get update
+      - run: sudo apt-get install libcrypt-dev
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          check-latest: true
+      - name: Install pdoc
+        run: pip install pdoc
+      - name: Build and install wheel
+        run: pip install .
+      - name: Generate docs
+        run: pdoc --no-show-source -o docs `python3 -c "import pyxcrypt;print(pyxcrypt.__path__[0])"`
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/
+  deploy:
+    needs: gen_docs
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
