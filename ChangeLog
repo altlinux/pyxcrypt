@@ -1,2 +1,7 @@
+2025-10-09	Daniel Zagaynov <kotopesutility@altlinux.org>
+-Version 0.1.1:
++ Fix test running on different linux and even MacOS
++ Add github actions
+
 2025-10-02	Daniel Zagaynov <kotopesutility@altlinux.org>
 -Version 0.1.0, First release
