@@ -21,7 +21,11 @@ install_data(
 )
 
 python_paths = [join_paths(meson.current_build_dir(), '../src/')]
-run_tests = find_program('tests/run_tests.sh')
+if host_machine.system() == 'darwin'
+  run_tests = find_program('tests/run_tests_macos.sh')
+else
+  run_tests = find_program('tests/run_tests.sh')
+endif
 test('unit-tests',
   run_tests,
   args: ['../tests'],
