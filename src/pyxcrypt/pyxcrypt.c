@@ -18,9 +18,12 @@
  */
 
 
+#if !defined(Py_LIMITED_API) || Py_LIMITED_API > 0x030a0000
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <string.h>
+#endif
 
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
