@@ -1,4 +1,4 @@
-project('pyxcrypt', 'c')
+project('pyxcrypt', 'c', meson_version: '>= 1.3.0')
 lxcrypt = dependency('libxcrypt')
 
 py = import('python').find_installation('python3', pure: false)
