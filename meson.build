@@ -7,7 +7,8 @@ py.extension_module('pyxcrypt',
 'src/pyxcrypt/pyxcrypt.c',
 dependencies: lxcrypt,
 install: true,
-subdir: 'pyxcrypt'
+subdir: 'pyxcrypt',
+limited_api: '3.2'
 )
 
 py.install_sources(
