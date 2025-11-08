@@ -69,6 +69,7 @@ class Test_CheckSalt(unittest.TestCase):
     def _test_checksalt(self, prefix, crypt_checksalt=pyxcrypt.pyxcrypt._crypt_checksalt,
                         crypt_gensalt=pyxcrypt.pyxcrypt._crypt_gensalt,
                         crypt=pyxcrypt.pyxcrypt._crypt):
+
         phrase = "police saying freeze"
         with self.subTest(f"Testing checksalt for {prefix}:"):
             exp_prefix, exp_gensalt, exp_crypt = self.pref_chck_gen_crypt[prefix]
@@ -85,53 +86,81 @@ class Test_CheckSalt(unittest.TestCase):
             self.assertEqual(ret_crypt, exp_crypt,
                              msg=f"Test checksalt(crypt(...)) for prefix={prefix} failed.")
 
+    @unittest.skipIf("yescrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "yescrypt is not supported by the current libcrypt build")
     def test_yescrypt(self):
         self._test_checksalt("$y$")
 
+    @unittest.skipIf("gost_yescrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "gost_yescrypt is not supported by the current"
+                     "libcrypt build")
     def test_gost_yescrypt(self):
         self._test_checksalt("$gy$")
 
+    @unittest.skipIf("descrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "descrypt is not supported by the current libcrypt build")
     def test_descrypt(self):
         self._test_checksalt("")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("bigcrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "bigcrypt is not supported by the current libcrypt build")
     def test_bigcrypt(self):
         self._test_checksalt("")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("bsdicrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "bsdicrypt is not supported by the current libcrypt build")
     def test_bsdicrypt(self):
         self._test_checksalt("_")
 
+    @unittest.skipIf("md5crypt" not in pyxcrypt.get_provided_prefixes(),
+                     "md5crypt is not supported by the current libcrypt build")
     def test_md5crypt(self):
         self._test_checksalt("$1$")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sunmd5" not in pyxcrypt.get_provided_prefixes(),
+                     "sunmd5 is not supported by the current libcrypt build")
     def test_sunmd5crypt(self):
         self._test_checksalt("$md5")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sm3crypt" not in pyxcrypt.get_provided_prefixes(),
+                     "sm3crypt is not supported by the current libcrypt build")
     def test_sm3crypt(self):
         self._test_checksalt("$sm3$")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sha1crypt" not in pyxcrypt.get_provided_prefixes(),
+                     "sha1crypt is not supported by the current libcrypt build")
     def test_sha1crypt(self):
         self._test_checksalt("$sha1")
 
+    @unittest.skipIf("sha256crypt" not in pyxcrypt.get_provided_prefixes(),
+                     "sha256crypt is not supported by the current"
+                     "libcrypt build")
     def test_sha256crypt(self):
         self._test_checksalt("$5$")
 
+    @unittest.skipIf("sha512crypt" not in pyxcrypt.get_provided_prefixes(),
+                     "sha512crypt is not supported by the current"
+                     "libcrypt build")
     def test_sha512crypt(self):
         self._test_checksalt("$6$")
 
+    @unittest.skipIf("sscrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "sscrypt is not supported by the current libcrypt build")
     def test_sscrypt(self):
         self._test_checksalt("$7$")
 
+    @unittest.skipIf("bcrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "bcrypt is not supported by the current libcrypt build")
     def test_bcrypt(self):
         self._test_checksalt("$2b$")
 
+    @unittest.skipIf("bcrypt_a" not in pyxcrypt.get_provided_prefixes(),
+                     "bcrypt_a is not supported by the current libcrypt build")
     def test_bcrypt_a(self):
         self._test_checksalt("$2a$")
 
+    @unittest.skipIf("bcrypt_y" not in pyxcrypt.get_provided_prefixes(),
+                     "bcrypt_y is not supported by the current libcrypt build")
     def test_bcrypt_y(self):
         self._test_checksalt("$2y$")
 
@@ -144,53 +173,81 @@ class Test_CheckSalt(unittest.TestCase):
 
 
 class TestCheckSalt(Test_CheckSalt):
+    @unittest.skipIf("yescrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "yescrypt is not supported by the current libcrypt build")
     def test_yescrypt(self):
         self._test_checksalt("$y$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
+    @unittest.skipIf("gost_yescrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "gost_yescrypt is not supported by the current"
+                     "libcrypt build")
     def test_gost_yescrypt(self):
         self._test_checksalt("$gy$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
+    @unittest.skipIf("descrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "descrypt is not supported by the current libcrypt build")
     def test_descrypt(self):
         self._test_checksalt("", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("bigcrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "bigcrypt is not supported by the current libcrypt build")
     def test_bigcrypt(self):
         self._test_checksalt("", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("bsdicrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "bsdicrypt is not supported by the current libcrypt build")
     def test_bsdicrypt(self):
         self._test_checksalt("_", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
+    @unittest.skipIf("md5crypt" not in pyxcrypt.get_provided_prefixes(),
+                     "md5crypt is not supported by the current libcrypt build")
     def test_md5crypt(self):
         self._test_checksalt("$1$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sunmd5" not in pyxcrypt.get_provided_prefixes(),
+                     "sunmd5 is not supported by the current libcrypt build")
     def test_sunmd5crypt(self):
         self._test_checksalt("$md5", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sm3crypt" not in pyxcrypt.get_provided_prefixes(),
+                     "sm3crypt is not supported by the current libcrypt build")
     def test_sm3crypt(self):
         self._test_checksalt("$sm3$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sha1crypt" not in pyxcrypt.get_provided_prefixes(),
+                     "sha1crypt is not supported by the current libcrypt build")
     def test_sha1crypt(self):
         self._test_checksalt("$sha1", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
+    @unittest.skipIf("sha256crypt" not in pyxcrypt.get_provided_prefixes(),
+                     "sha256crypt is not supported by the current"
+                     "libcrypt build")
     def test_sha256crypt(self):
         self._test_checksalt("$5$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
+    @unittest.skipIf("sha512crypt" not in pyxcrypt.get_provided_prefixes(),
+                     "sha512crypt is not supported by the current"
+                     "libcrypt build")
     def test_sha512crypt(self):
         self._test_checksalt("$6$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
+    @unittest.skipIf("sscrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "sscrypt is not supported by the current libcrypt build")
     def test_sscrypt(self):
         self._test_checksalt("$7$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
+    @unittest.skipIf("bcrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "bcrypt is not supported by the current libcrypt build")
     def test_bcrypt(self):
         self._test_checksalt("$2b$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
+    @unittest.skipIf("bcrypt_a" not in pyxcrypt.get_provided_prefixes(),
+                     "bcrypt_a is not supported by the current libcrypt build")
     def test_bcrypt_a(self):
         self._test_checksalt("$2a$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
+    @unittest.skipIf("bcrypt_y" not in pyxcrypt.get_provided_prefixes(),
+                     "bcrypt_y is not supported by the current libcrypt build")
     def test_bcrypt_y(self):
         self._test_checksalt("$2y$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
