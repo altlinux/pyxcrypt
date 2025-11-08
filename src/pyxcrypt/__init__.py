@@ -25,6 +25,47 @@ CRYPT_SALT_INVALID = 1
 CRYPT_SALT_METHOD_LEGACY = 3
 
 
+def get_supported_prefixes():
+    """
+    Return a dict of supported hashing algorithms in the form
+    {pretty_name:prefix}
+
+    :return: supported hashes;
+    :rtype: dict.
+    """
+    hashes = {"yescrypt": "$y$",
+              "gost-yescrypt": "$gy$",
+              "gost_yescrypt": "$gy$",
+              "sm3_yescrypt": "$sm3y$",
+              "scrypt": "$7$",
+              "bcrypt": "$2b$",
+              "bcrypt_y": "$2y$",
+              "bcrypt_a": "$2a$",
+              "bcrypt_x": "$2x$",
+              "sha512crypt": "$6$",
+              "sha256crypt": "$5$",
+              "md5crypt": "$1$",
+              "nt": "$3$",
+              "descrypt": ""}
+    return hashes
+
+
+def get_known_prefixes():
+    """
+    Return a dict of known hashing algorithms in the form
+    {pretty_name:prefix} included supported hashing algorithms
+
+    :return: known prefixes;
+    :rtype: dict.
+    """
+    known_prefixes = {"bsdicrypt": "_",
+                      "sunmd5": "$md5",
+                      "sm3crypt": "$sm3$",
+                      "sha1crypt": "$sha1",
+                      }
+    return known_prefixes | get_supported_prefixes()
+
+
 def crypt_gensalt(prefix=None, count=0, rbytes=None, nrbytes=0):
     """
     Compile a string for use as the setting argument to crypt.
@@ -40,24 +81,7 @@ def crypt_gensalt(prefix=None, count=0, rbytes=None, nrbytes=0):
     :return: salt;
     :rtype: str.
     """
-    hashes = {"yescrypt": "$y$",
-              "gost-yescrypt": "$gy$",
-              "gost_yescrypt": "$gy$",
-              "sm3_yescrypt": "$sm3y$",
-              "scrypt": "$7$",
-              "bcrypt": "$2b$",
-              "bcrypt_y": "$2y$",
-              "bcrypt_a": "$2a$",
-              "bcrypt_x": "$2x$",
-              "sm3crypt": "$sm3$",
-              "sha512crypt": "$6$",
-              "sha256crypt": "$5$",
-              "sha1crypt": "$sha1",
-              "sunmd5": "$md5",
-              "md5crypt": "$1$",
-              "nt": "$3$",
-              "bsdicrypt": "_",
-              "descrypt": ""}
+    hashes = get_known_prefixes()
     return pyxcrypt._crypt_gensalt(prefix if prefix not in hashes else
                                    hashes[prefix], count, rbytes, nrbytes)
 
