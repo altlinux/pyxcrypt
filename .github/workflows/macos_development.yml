@@ -1,0 +1,28 @@
+---
+name: check_on_macos_development
+on:
+  push:
+    branches:
+      - development
+
+env:
+  PKG_CONFIG_PATH: "/opt/homebrew/opt/libxcrypt/lib/pkgconfig"
+
+jobs:
+  check_development:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: development
+      - uses: actions/setup-python@v6
+      - run: brew install meson libxcrypt
+      - name: Prepare
+        run: meson macos_build
+      - name: Run tests
+        run: meson test -C macos_build
+      - name: Print log on failure
+        if: failure()
+        run: cat linux_build/meson-logs/testlog.txt
