@@ -17,12 +17,81 @@ along with pyxcrypt.
 If not, see <https://www.gnu.org/licenses/>.
 """
 
+import sys
 
 from . import pyxcrypt
 
 CRYPT_SALT_OK = 0
 CRYPT_SALT_INVALID = 1
 CRYPT_SALT_METHOD_LEGACY = 3
+
+
+def get_provided_prefixes(verbose=False):
+    """
+    Return a dict of supported hashing algorithms in the form
+    {pretty_name:prefix}
+
+    :param verbose: turn on verbose mode
+    :type verbose: bool
+    :return: supported hashes;
+    :rtype: dict.
+    """
+
+    if (provided := pyxcrypt._crypt_get_provided_hashes()):
+        return dict(map(lambda k_v: k_v.split(":"),
+                        filter(lambda p: p and "bigcrypt" not in p,
+                               provided.split(";"))))
+    else:
+        provided = dict()
+
+        # Hash algorithms from this list are not supported
+        black_list = ["bigcrypt"]
+
+        for key, value in get_known_prefixes().items():
+            if key in black_list:
+                if verbose:
+                    print(f"{key} is not supported, filter out",
+                          file=sys.stderr)
+                continue
+            try:
+                pyxcrypt._crypt_gensalt(value[0], 0, None, value[1])
+            except RuntimeError:
+                if verbose:
+                    print(f"{key} is not supported, filter out",
+                          file=sys.stderr)
+            else:
+                provided[key] = value
+        return provided
+
+
+def get_known_prefixes():
+    """
+    Return a dict of known hashing algorithms in the form
+    {pretty_name:(prefix, n_rbytes)}
+
+    :return: known prefixes;
+    :rtype: dict.
+    """
+    known_prefixes = {"yescrypt": ("$y$", 16),
+                      "gost_yescrypt": ("$gy$", 16),
+                      "sm3_yescrypt": ("$sm3y$", 16),
+                      "scrypt": ("$7$", 16),
+                      "bcrypt": ("$2b$", 16),
+                      "bcrypt_y": ("$2y$", 16),
+                      "bcrypt_a": ("$2a$", 16),
+                      "bcrypt_x": ("$2x$", 16),
+                      "sm3crypt": ("$sm3$", 16),
+                      "sha512crypt": ("$6$", 15),
+                      "sha256crypt": ("$5$", 15),
+                      "sha1crypt": ("$sha1", 20),
+                      "sunmd5": ("$md5", 8),
+                      "md5crypt": ("$1$", 9),
+                      "nt": ("$3$", 1),
+                      "bsdicrypt": ("_", 3),
+                      "bigcrypt": ("", 2),
+                      "descrypt": ("", 2),
+                      }
+    return known_prefixes
 
 
 def crypt_gensalt(prefix=None, count=0, rbytes=None, nrbytes=0):
@@ -40,26 +109,10 @@ def crypt_gensalt(prefix=None, count=0, rbytes=None, nrbytes=0):
     :return: salt;
     :rtype: str.
     """
-    hashes = {"yescrypt": "$y$",
-              "gost-yescrypt": "$gy$",
-              "gost_yescrypt": "$gy$",
-              "sm3_yescrypt": "$sm3y$",
-              "scrypt": "$7$",
-              "bcrypt": "$2b$",
-              "bcrypt_y": "$2y$",
-              "bcrypt_a": "$2a$",
-              "bcrypt_x": "$2x$",
-              "sm3crypt": "$sm3$",
-              "sha512crypt": "$6$",
-              "sha256crypt": "$5$",
-              "sha1crypt": "$sha1",
-              "sunmd5": "$md5",
-              "md5crypt": "$1$",
-              "nt": "$3$",
-              "bsdicrypt": "_",
-              "descrypt": ""}
-    return pyxcrypt._crypt_gensalt(prefix if prefix not in hashes else
-                                   hashes[prefix], count, rbytes, nrbytes)
+    return pyxcrypt._crypt_gensalt(prefix if prefix not in
+                                   (hashes := get_known_prefixes())
+                                   else hashes[prefix][0], count,
+                                   rbytes, nrbytes)
 
 
 def crypt_gensalt_default(count=0, rbytes=None, nrbytes=0):

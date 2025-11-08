@@ -119,6 +119,17 @@ static PyObject * _crypt_checksalt(PyObject *self, PyObject *args)
     return Py_BuildValue("i", crypt_checksalt(setting));
 }
 
+static PyObject * _crypt_get_provided_hashes(PyObject *self, PyObject *args)
+{
+    PyObject *supported_hashes = NULL;
+#if defined CRYPT_GET_SUPPORTED_HASH_METHODS_AVAILABLE
+    supported_hashes = PyUnicode_FromString(crypt_get_supported_hash_methods());
+#else
+    supported_hashes = PyUnicode_FromString("");
+#endif
+    return supported_hashes;
+}
+
 static PyMethodDef PyXcryptMethods[] = {
     {"_crypt_gensalt", _crypt_gensalt, METH_VARARGS,
      "compile a string for use as the setting argument to crypt"},
@@ -127,6 +138,8 @@ static PyMethodDef PyXcryptMethods[] = {
     {"_crypt_checksalt", _crypt_checksalt, METH_VARARGS,
      "checks the setting string against the system configuration and reports "
      "whether the hashing method and parameters it specifies are acceptable"},
+    {"_crypt_get_provided_hashes", _crypt_get_provided_hashes, METH_VARARGS,
+     "get string of enabled hashes \"(hash_name:prefix;)*\""},
     {NULL, NULL, 0, NULL}
 };
 
