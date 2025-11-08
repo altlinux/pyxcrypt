@@ -46,26 +46,31 @@ class Test_Crypt(unittest.TestCase):
     def test_descrypt(self):
         self._test_crypt("")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("bigcrypt" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_bigcrypt(self):
         self._test_crypt("")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("bsdicrypt" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_bsdicrypt(self):
         self._test_crypt("_")
 
     def test_md5crypt(self):
         self._test_crypt("$1$")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sunmd5" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_sunmd5crypt(self):
         self._test_crypt("$md5")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sm3crypt" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_sm3crypt(self):
         self._test_crypt("$sm3$")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sha1crypt" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_sha1crypt(self):
         self._test_crypt("$sha1")
 
@@ -101,26 +106,31 @@ class TestCrypt(Test_Crypt):
     def test_descrypt(self):
         self._test_crypt("", pyxcrypt.crypt)
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("bigcrypt" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_bigcrypt(self):
         self._test_crypt("", pyxcrypt.crypt)
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("bsdicrypt" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_bsdicrypt(self):
         self._test_crypt("_", pyxcrypt.crypt)
 
     def test_md5crypt(self):
         self._test_crypt("$1$", pyxcrypt.crypt)
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sunmd5" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_sunmd5crypt(self):
         self._test_crypt("$md5", pyxcrypt.crypt)
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sm3crypt" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_sm3crypt(self):
         self._test_crypt("$sm3$", pyxcrypt.crypt)
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sha1crypt" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_sha1crypt(self):
         self._test_crypt("$sha1", pyxcrypt.crypt)
 

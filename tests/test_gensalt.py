@@ -238,26 +238,31 @@ class Test_GenSalt(unittest.TestCase):
     def test_descrypt(self):
         self._test_prefix(self.des_rounds_expected, "")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("bigcrypt" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_bigcrypt(self):
         self._test_prefix(self.big_rounds_expected, "")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("bsdicrypt" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_bsdicrypt(self):
         self._test_prefix(self.bsdi_rounds_expected, "_")
 
     def test_md5crypt(self):
         self._test_prefix(self.md5_rounds_expected, "$1$")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sunmd5" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_sunmd5crypt(self):
         self._test_prefix(self.sunmd5_rounds_expected, "$md5")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sm3crypt" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_sm3crypt(self):
         self._test_prefix(self.sm3_rounds_expected, "$sm3$")
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sha1crypt" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_sha1crypt(self):
         self._test_prefix(self.sha1_rounds_expected, "$sha1")
 
@@ -300,15 +305,18 @@ class TestGenSalt(Test_GenSalt):
     def test_md5crypt(self):
         self._test_prefix(self.md5_rounds_expected, "md5crypt", pyxcrypt.crypt_gensalt)
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sunmd5" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_sunmd5crypt(self):
         self._test_prefix(self.sunmd5_rounds_expected, "sunmd5", pyxcrypt.crypt_gensalt)
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sm3crypt" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_sm3crypt(self):
         self._test_prefix(self.sm3_rounds_expected, "sm3crypt", pyxcrypt.crypt_gensalt)
 
-    @unittest.skip("Not supported")
+    @unittest.skipIf("sha1crypt" not in pyxcrypt.get_supported_prefixes(),
+                     "Not supported")
     def test_sha1crypt(self):
         self._test_prefix(self.sha1_rounds_expected, "sha1crypt", pyxcrypt.crypt_gensalt)
 
