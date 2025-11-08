@@ -1,0 +1,33 @@
+---
+name: check_on_linux_development
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  check_development:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        release:
+          - bionic
+          - focal
+          - jammy
+          - noble
+          - plucky
+          - questing
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: development
+      - run: sudo apt-get update
+      - run: sudo apt-get install libcrypt-dev meson
+      - name: Prepare
+        run: meson linux_build
+      - name: Run tests
+        run: meson test -C linux_build
+      - name: Print log on failure
+        if: failure()
+        run: cat linux_build/meson-logs/testlog.txt
