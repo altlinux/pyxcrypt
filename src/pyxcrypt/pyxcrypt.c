@@ -73,9 +73,11 @@ static PyObject * _crypt(PyObject *self, PyObject *args)
 {
     errno = 0;
     const char *phrase, *setting;
-    char hash[CRYPT_GENSALT_OUTPUT_SIZE];
+    char *hash = NULL;
     struct crypt_data *data = NULL;
+    int size = 0;
     Py_ssize_t *dumb_sz_1, *dumb_sz_2;
+    PyObject *output = NULL;
 
     if(PyTuple_Size(args) != 2)
     {
@@ -88,23 +90,22 @@ static PyObject * _crypt(PyObject *self, PyObject *args)
         PyErr_SetString(PyExc_TypeError, "Arguments parsing");
         return NULL;
     }
-    if ((data = malloc(sizeof(*data))) == NULL)
+    hash = crypt_ra(phrase, setting, (void **)&data, &size);
+    if (data == NULL)
     {
         PyErr_SetString(PyExc_MemoryError, strerror(errno));
         return NULL;
     }
-    memset(data, 0, sizeof(*data));
-    if (crypt_r(phrase, setting, data) == NULL || data->output[0] == '*')
+    if (hash == NULL)
     {
         PyErr_SetString(PyExc_RuntimeError, strerror(errno));
         free(data);
         return NULL;
     }
-
-    memcpy(hash, data->output, CRYPT_GENSALT_OUTPUT_SIZE);
+    output = Py_BuildValue("z", hash);
     free(data);
 
-    return Py_BuildValue("z", hash);
+    return output;
 }
 
 static PyObject * _crypt_checksalt(PyObject *self, PyObject *args)
