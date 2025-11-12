@@ -1,0 +1,47 @@
+/*
+ * This file is part of pyxcrypt.
+ *
+ * pyxcrypt is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * pyxcrypt is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with pyxcrypt.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#if !defined _PYXCRYPT_CONFIG_H_
+#define _PYXCRYPT_CONFIG_H_
+
+#include <stddef.h>
+
+#mesondefine PYXCRYPT_HAVE_SECUREZEROMEMORY
+#mesondefine PYXCRYPT_HAVE_MEMSET_EXPLICIT
+#mesondefine PYXCRYPT_HAVE_EXPLICIT_BZERO
+#mesondefine PYXCRYPT_USE_MEMERASE_IMPL
+
+#if defined PYXCRYPT_HAVE_SECUREZEROMEMORY
+#include <Windows.h>
+#define pyxcrypt_memerase(p, l) SecureZeroMemory(p, l)
+#elif defined PYXCRYPT_HAVE_MEMSET_EXPLICIT
+#define pyxcrypt_memerase(p, l) memset_explicit(p, 0, l)
+#elif defined PYXCRYPT_HAVE_EXPLICIT_BZERO
+#define pyxcrypt_memerase(p, l) explicit_bzero(p, l)
+#elif defined PYXCRYPT_USE_MEMERASE_IMPL
+
+#if defined __GNUC__ && __GNUC__ >= 3
+#define NO_INLINE __attribute__ ((__noinline__))
+#else
+#error "Don't know how to prevent function inlining"
+#endif
+
+NO_INLINE extern void pyxcrypt_memerase(void *p, size_t l);
+#endif /* PYXCRYPT_USE_MEMERASE_IMPL */
+#endif /* _PYXCRYPT_CONFIG_H_ */

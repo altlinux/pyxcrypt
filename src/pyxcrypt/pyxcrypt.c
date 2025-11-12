@@ -17,6 +17,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <pyxcrypt-config.h>
 
 #if !defined(Py_LIMITED_API) || Py_LIMITED_API > 0x030a0000
 #include <stdio.h>
@@ -64,6 +65,7 @@ static PyObject * _crypt_gensalt(PyObject *self, PyObject *args)
         return NULL;
     }
     output = Py_BuildValue("z", setting);
+    pyxcrypt_memerase(setting, CRYPT_GENSALT_OUTPUT_SIZE);
     free(setting);
 
     return output;
@@ -99,10 +101,12 @@ static PyObject * _crypt(PyObject *self, PyObject *args)
     if (hash == NULL)
     {
         PyErr_SetString(PyExc_RuntimeError, strerror(errno));
+        pyxcrypt_memerase(data, size);
         free(data);
         return NULL;
     }
     output = Py_BuildValue("z", hash);
+    pyxcrypt_memerase(data->output, sizeof(data->output));
     free(data);
 
     return output;
