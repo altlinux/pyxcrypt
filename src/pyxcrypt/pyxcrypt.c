@@ -36,9 +36,10 @@ static PyObject * _crypt_gensalt(PyObject *self, PyObject *args)
     errno = 0;
     int nrbytes;
     unsigned long count;
-    char *_hash = NULL;
+    char *setting = NULL;
     const char *prefix, *rbytes;
     Py_ssize_t *dumb_sz_1, *dumb_sz_2;
+    PyObject *output = NULL;
 
     if(PyTuple_Size(args) != 4)
     {
@@ -51,14 +52,21 @@ static PyObject * _crypt_gensalt(PyObject *self, PyObject *args)
         PyErr_SetString(PyExc_TypeError, "Arguments parsing");
         return NULL;
     }
-
-    if ((_hash = crypt_gensalt_ra(prefix, count, rbytes, nrbytes)) == NULL)
+    setting = crypt_gensalt_ra(prefix, count, rbytes, nrbytes);
+    if (setting == NULL)
     {
+        if (errno == ENOMEM)
+        {
+            PyErr_SetString(PyExc_MemoryError, strerror(errno));
+            return NULL;
+        }
         PyErr_SetString(PyExc_RuntimeError, strerror(errno));
         return NULL;
     }
+    output = Py_BuildValue("z", setting);
+    free(setting);
 
-    return Py_BuildValue("z", _hash);
+    return output;
 }
 
 static PyObject * _crypt(PyObject *self, PyObject *args)
