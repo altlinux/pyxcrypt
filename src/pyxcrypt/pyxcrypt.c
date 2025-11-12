@@ -110,7 +110,6 @@ static PyObject * _crypt(PyObject *self, PyObject *args)
 
 static PyObject * _crypt_checksalt(PyObject *self, PyObject *args)
 {
-    errno = 0;
     const char *setting;
     Py_ssize_t *dumb_sz_1;
 
