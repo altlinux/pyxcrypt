@@ -3,7 +3,7 @@ name: check_on_linux_development
 on:
   push:
     branches:
-      - development
+      - development_kewl_future
 
 jobs:
   check_development:
@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: development
+          ref: development_kewl_future
       - run: sudo apt-get update
       - run: sudo apt-get install libcrypt-dev meson
       - name: Prepare

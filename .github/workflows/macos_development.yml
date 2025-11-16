@@ -3,7 +3,7 @@ name: check_on_macos_development
 on:
   push:
     branches:
-      - development
+      - development_kewl_future
 
 env:
   PKG_CONFIG_PATH: "/opt/homebrew/opt/libxcrypt/lib/pkgconfig"
@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: development
+          ref: development_kewl_future
       - uses: actions/setup-python@v6
       - run: brew install meson libxcrypt
       - name: Prepare
