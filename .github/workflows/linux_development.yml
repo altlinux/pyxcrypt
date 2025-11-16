@@ -27,7 +27,6 @@ jobs:
       - name: Prepare
         run: meson linux_build
       - name: Run tests
-        run: meson test -C linux_build
+        run: meson test -C linux_build --verbose
       - name: Print log on failure
-        if: failure()
         run: cat linux_build/meson-logs/testlog.txt
