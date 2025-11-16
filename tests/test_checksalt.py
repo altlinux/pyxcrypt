@@ -33,8 +33,8 @@ class Test_CheckSalt(unittest.TestCase):
                            "_": [CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY],
                            "$1$": [CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY],
                            "$3$": [CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY],
-                           "$md5$": [CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY],
-                           "$sha1$": [CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY],
+                           "$md5": [CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY],
+                           "$sha1": [CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY],
                            "$5$": [CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY],
                            "$6$": [CRYPT_SALT_OK, CRYPT_SALT_OK, CRYPT_SALT_OK],
                            "$sm3$": [CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY, CRYPT_SALT_METHOD_LEGACY],
@@ -144,9 +144,9 @@ class Test_CheckSalt(unittest.TestCase):
     def test_sha512crypt(self):
         self._test_checksalt("$6$")
 
-    @unittest.skipIf("sscrypt" not in pyxcrypt.get_provided_prefixes(),
-                     "sscrypt is not supported by the current libcrypt build")
-    def test_sscrypt(self):
+    @unittest.skipIf("scrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "scrypt is not supported by the current libcrypt build")
+    def test_scrypt(self):
         self._test_checksalt("$7$")
 
     @unittest.skipIf("bcrypt" not in pyxcrypt.get_provided_prefixes(),
@@ -231,9 +231,9 @@ class TestCheckSalt(Test_CheckSalt):
     def test_sha512crypt(self):
         self._test_checksalt("$6$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
-    @unittest.skipIf("sscrypt" not in pyxcrypt.get_provided_prefixes(),
-                     "sscrypt is not supported by the current libcrypt build")
-    def test_sscrypt(self):
+    @unittest.skipIf("scrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "scrypt is not supported by the current libcrypt build")
+    def test_scrypt(self):
         self._test_checksalt("$7$", pyxcrypt.crypt_checksalt, pyxcrypt.crypt_gensalt, pyxcrypt.crypt)
 
     @unittest.skipIf("bcrypt" not in pyxcrypt.get_provided_prefixes(),

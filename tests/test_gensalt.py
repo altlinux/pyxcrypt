@@ -288,9 +288,9 @@ class Test_GenSalt(unittest.TestCase):
     def test_sha512crypt(self):
         self._test_prefix(self.sha512_rounds_expected, "$6$")
 
-    @unittest.skipIf("sscrypt" not in pyxcrypt.get_provided_prefixes(),
-                     "sscrypt is not supported by the current libcrypt build")
-    def test_sscrypt(self):
+    @unittest.skipIf("scrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "scrypt is not supported by the current libcrypt build")
+    def test_scrypt(self):
         self._test_prefix(self.ss_rounds_expected, "$7$")
 
     @unittest.skipIf("bcrypt" not in pyxcrypt.get_provided_prefixes(),
@@ -366,9 +366,9 @@ class TestGenSalt(Test_GenSalt):
     def test_sha512crypt(self):
         self._test_prefix(self.sha512_rounds_expected, "sha512crypt", pyxcrypt.crypt_gensalt)
 
-    @unittest.skipIf("sscrypt" not in pyxcrypt.get_provided_prefixes(),
-                     "sscrypt is not supported by the current libcrypt build")
-    def test_sscrypt(self):
+    @unittest.skipIf("scrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "scrypt is not supported by the current libcrypt build")
+    def test_scrypt(self):
         self._test_prefix(self.ss_rounds_expected, "scrypt", pyxcrypt.crypt_gensalt)
 
     @unittest.skipIf("bcrypt" not in pyxcrypt.get_provided_prefixes(),
