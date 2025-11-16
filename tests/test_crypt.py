@@ -95,9 +95,9 @@ class Test_Crypt(unittest.TestCase):
     def test_sha512crypt(self):
         self._test_crypt("$6$")
 
-    @unittest.skipIf("sscrypt" not in pyxcrypt.get_provided_prefixes(),
-                     "sscrypt is not supported by the current libcrypt build")
-    def test_sscrypt(self):
+    @unittest.skipIf("scrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "scrypt is not supported by the current libcrypt build")
+    def test_scrypt(self):
         self._test_crypt("$7$")
 
     @unittest.skipIf("bcrypt" not in pyxcrypt.get_provided_prefixes(),
@@ -180,9 +180,9 @@ class TestCrypt(Test_Crypt):
     def test_sha512crypt(self):
         self._test_crypt("$6$", pyxcrypt.crypt)
 
-    @unittest.skipIf("sscrypt" not in pyxcrypt.get_provided_prefixes(),
-                     "sscrypt is not supported by the current libcrypt build")
-    def test_sscrypt(self):
+    @unittest.skipIf("scrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "scrypt is not supported by the current libcrypt build")
+    def test_scrypt(self):
         self._test_crypt("$7$", pyxcrypt.crypt)
 
     @unittest.skipIf("bcrypt" not in pyxcrypt.get_provided_prefixes(),
