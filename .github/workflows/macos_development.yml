@@ -25,4 +25,4 @@ jobs:
         run: meson test -C macos_build
       - name: Print log on failure
         if: failure()
-        run: cat linux_build/meson-logs/testlog.txt
+        run: cat macos_build/meson-logs/testlog.txt
