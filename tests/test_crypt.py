@@ -78,6 +78,11 @@ class Test_Crypt(unittest.TestCase):
     def test_sm3crypt(self):
         self._test_crypt("$sm3$")
 
+    @unittest.skipIf("sm3_yescrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "sm3_yescrypt is not supported by the current libcrypt build")
+    def test_sm3_yescrypt(self):
+        self._test_crypt("$sm3y$")
+
     @unittest.skipIf("sha1crypt" not in pyxcrypt.get_provided_prefixes(),
                      "sha1crypt is not supported by the current libcrypt build")
     def test_sha1crypt(self):
@@ -162,6 +167,11 @@ class TestCrypt(Test_Crypt):
                      "sm3crypt is not supported by the current libcrypt build")
     def test_sm3crypt(self):
         self._test_crypt("$sm3$", pyxcrypt.crypt)
+
+    @unittest.skipIf("sm3_yescrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "sm3_yescrypt is not supported by the current libcrypt build")
+    def test_sm3_yescrypt(self):
+        self._test_crypt("$sm3y$", pyxcrypt.crypt)
 
     @unittest.skipIf("sha1crypt" not in pyxcrypt.get_provided_prefixes(),
                      "sha1crypt is not supported by the current libcrypt build")

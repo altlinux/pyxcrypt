@@ -79,7 +79,7 @@ class Test_GenSalt(unittest.TestCase):
                                                 "$md5,rounds=4294911250$3HtkHq/x$",
                                                 "$md5,rounds=4294942764$p.5e9AQf$"]
                               }
-    # Rounds and expected output for sunmd5
+    # Rounds and expected output for sm3crypt
     sm3_rounds_expected = {0: ["$sm3$MJHnaAkegEVYHsFK",
                                "$sm3$PKXc3hCOSyMqdaEQ",
                                "$sm3$ZAFlICwYRETzIzIj",
@@ -97,6 +97,23 @@ class Test_GenSalt(unittest.TestCase):
                                              "$sm3$rounds=999999999$ZAFlICwYRETzIzIj",
                                              "$sm3$rounds=999999999$UqGBkVu01rurVZqg"]
                            }
+    # Rounds and expected output for sm3_yescrypt
+    sm3_yescrypt_rounds_expected = {0: [
+                                        "$sm3y$j9T$MJHnaAkegEVYHsFKkmfzJ1",
+                                        "$sm3y$j9T$PKXc3hCOSyMqdaEQArI62/",
+                                        "$sm3y$j9T$ZAFlICwYRETzIzIjEIC86.",
+                                        "$sm3y$j9T$UqGBkVu01rurVZqgNchTB0"],
+                                    1: [
+                                        "$sm3y$j75$MJHnaAkegEVYHsFKkmfzJ1",
+                                        "$sm3y$j75$PKXc3hCOSyMqdaEQArI62/",
+                                        "$sm3y$j75$ZAFlICwYRETzIzIjEIC86.",
+                                        "$sm3y$j75$UqGBkVu01rurVZqgNchTB0"],
+                                    11: [
+                                        "$sm3y$jFT$MJHnaAkegEVYHsFKkmfzJ1",
+                                        "$sm3y$jFT$PKXc3hCOSyMqdaEQArI62/",
+                                        "$sm3y$jFT$ZAFlICwYRETzIzIjEIC86.",
+                                        "$sm3y$jFT$UqGBkVu01rurVZqgNchTB0"]
+                                    }
     # Rounds and expected output for sha1crypt
     sha1_rounds_expected = {0: ["$sha1$248488$ggu.H673kaZ5$",
                                 "$sha1$248421$SWqudaxXA5L0$",
@@ -271,6 +288,11 @@ class Test_GenSalt(unittest.TestCase):
     def test_sm3crypt(self):
         self._test_prefix(self.sm3_rounds_expected, "$sm3$")
 
+    @unittest.skipIf("sm3_yescrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "sm3_yescrypt is not supported by the current libcrypt build")
+    def test_sm3_yescrypt(self):
+        self._test_prefix(self.sm3_yescrypt_rounds_expected, "$sm3y$")
+
     @unittest.skipIf("sha1crypt" not in pyxcrypt.get_provided_prefixes(),
                      "sha1crypt is not supported by the current libcrypt build")
     def test_sha1crypt(self):
@@ -348,6 +370,11 @@ class TestGenSalt(Test_GenSalt):
                      "sm3crypt is not supported by the current libcrypt build")
     def test_sm3crypt(self):
         self._test_prefix(self.sm3_rounds_expected, "sm3crypt", pyxcrypt.crypt_gensalt)
+
+    @unittest.skipIf("sm3_yescrypt" not in pyxcrypt.get_provided_prefixes(),
+                     "sm3_yescrypt is not supported by the current libcrypt build")
+    def test_sm3_yescrypt(self):
+        self._test_prefix(self.sm3_yescrypt_rounds_expected, "sm3_yescrypt", pyxcrypt.crypt_gensalt)
 
     @unittest.skipIf("sha1crypt" not in pyxcrypt.get_provided_prefixes(),
                      "sha1crypt is not supported by the current libcrypt build")
