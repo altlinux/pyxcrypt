@@ -1,0 +1,36 @@
+---
+# Check that the freshest version of pyxcrypt
+# is compatible with the freshest version of libxcrypt
+name: Check against upstream
+on:
+  schedule:
+    - cron: '0 7 * * *'
+
+jobs:
+  check_development:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: development_kewl_future
+      - run: sudo apt-get update
+      - run: sudo apt-get install autoconf automake gcc git meson libtool pkg-config cmake python3-dev libltdl-dev
+      - name: Clone libxcrypt
+        # Here should be upstream repo
+        run: git -C /tmp clone https://github.com/kotopesutility/libxcrypt.git
+      - name: Checkout on develop
+        run: git -C /tmp/libxcrypt checkout develop
+      - name: Configure
+        run: cd /tmp/libxcrypt && sh autogen.sh && ./configure --enable-hashes=all && cd $OLDPWD
+      - name: Build libxcrypt
+        run: make -j4 -C /tmp/libxcrypt
+      - name: Install it
+        run: sudo make install -C /tmp/libxcrypt
+      - name: 
+        run: meson --libdir=/usr/local/lib/ --includedir=/usr/local/include linux_build
+      - name: Run tests
+        run: LD_LIBRARY_PATH=/usr/local/lib meson test -C linux_build --verbose
+      - name: Print log on failure
+        run: cat linux_build/meson-logs/testlog.txt
