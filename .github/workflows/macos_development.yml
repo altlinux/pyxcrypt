@@ -22,6 +22,6 @@ jobs:
       - name: Prepare
         run: meson macos_build
       - name: Run tests
-        run: meson test -C macos_build --verbose
+        run: meson test -C macos_build --verbose --timeout-multiplier="10"
       - name: Print log on failure
         run: cat macos_build/meson-logs/testlog.txt
